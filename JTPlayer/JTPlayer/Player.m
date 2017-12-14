@@ -9,6 +9,7 @@
 #import "Player.h"
 #import "PlayerAssetLoaderDelegate.h"
 
+#import "PlayerFileManager.h"
 #import "PlayerLogger.h"
 
 /* Asset keys */
@@ -59,11 +60,8 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     self.player = [[AVPlayer alloc] init];
     self.isPlaying = NO;
     
-    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *tempPath = NSTemporaryDirectory();
-
-    self.destDirectory = cachePath;
-    self.cacheDirectory = tempPath;
+    self.destDirectory = PlayerFileManager.sharedInstance.destDirectory;
+    self.cacheDirectory = PlayerFileManager.sharedInstance.cacheDirectory;
 }
 
 - (void)dealloc {

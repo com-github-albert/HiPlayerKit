@@ -8,6 +8,7 @@
 
 #import "PlayerDataRequest.h"
 #import "PlayerLogger.h"
+#import "PlayerFileManager.h"
 
 @interface PlayerDataRequest () <NSURLSessionDelegate, NSURLSessionDataDelegate>
 
@@ -26,14 +27,6 @@
 
 @end
 
-@interface PlayerDataRequest (FileManager)
-
-- (void)createDirectoryAtPath:(NSString *)path;
-- (void)createFileAtPath:(NSString *)path;
-- (BOOL)deleteFileAtPath:(NSString *)path;
-
-@end
-
 @implementation PlayerDataRequest
 
 - (instancetype)initWithCacheDirectory:(NSString *)cacheDirectory {
@@ -42,7 +35,6 @@
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
         self.session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:[NSOperationQueue mainQueue]];
         self.cacheDirectory = cacheDirectory;
-        [self createDirectoryAtPath:self.cacheDirectory];
     }
     return self;
 }
@@ -78,7 +70,7 @@
     
     NSString *cachePath = [self.cacheDirectory stringByAppendingPathComponent:url.lastPathComponent];
     self.playerModel.location = [NSURL fileURLWithPath:cachePath isDirectory:NO];
-    [self createFileAtPath:cachePath];
+    [PlayerFileManager createFileAtPath:cachePath];
     self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:cachePath];
 }
 
@@ -167,41 +159,6 @@ didBecomeInvalidWithError:(NSError *)error {
     if (self.delegate && [self.delegate respondsToSelector:@selector(playerDataRequest:didCompleteWithError:)]) {
         [self.delegate playerDataRequest:self didCompleteWithError:error];
     }
-}
-
-@end
-
-@implementation PlayerDataRequest (FileManager)
-
-- (void)createDirectoryAtPath:(NSString *)path {
-    BOOL isDirectory, isExist;
-    isExist = [NSFileManager.defaultManager fileExistsAtPath:path isDirectory:&isDirectory];
-    if (!isExist || !isDirectory) {
-        [NSFileManager.defaultManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-}
-
-- (void)createFileAtPath:(NSString *)path {
-    BOOL isExist = [NSFileManager.defaultManager fileExistsAtPath:path];
-    if (isExist) {
-        [NSFileManager.defaultManager removeItemAtPath:path error:nil];
-    }
-    [NSFileManager.defaultManager createFileAtPath:path contents:nil attributes:nil];
-}
-
-- (BOOL)deleteFileAtPath:(NSString *)path {
-    NSError* error;
-    BOOL isDirectory, isExist;
-    isExist = [NSFileManager.defaultManager fileExistsAtPath:path isDirectory:&isDirectory];
-    if (isExist) {
-        BOOL success = [NSFileManager.defaultManager removeItemAtPath:path error:&error];
-        if (success) {
-            return YES;
-        } else {
-            NSLog(@"Delete directory failure: %@", error.description);
-        }
-    }
-    return NO;
 }
 
 @end

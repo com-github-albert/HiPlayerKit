@@ -28,6 +28,8 @@
 		6B9259D11FE262B600B41E15 /* PlayerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9259CB1FE262B600B41E15 /* PlayerDataRequest.m */; };
 		6B9259D21FE262B600B41E15 /* PlayerAssetLoaderDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9259CD1FE262B600B41E15 /* PlayerAssetLoaderDelegate.m */; };
 		6B9259D31FE2631B00B41E15 /* Player.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6B9259C91FE262B600B41E15 /* Player.h */; };
+		6BB7A8241FE26F8600ED8655 /* PlayerFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB7A8231FE26F8600ED8655 /* PlayerFileManager.m */; };
+		6BB7A8251FE2757800ED8655 /* PlayerFileManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6BB7A8221FE26F8600ED8655 /* PlayerFileManager.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,7 @@
 			dstPath = include;
 			dstSubfolderSpec = 16;
 			files = (
+				6BB7A8251FE2757800ED8655 /* PlayerFileManager.h in CopyFiles */,
 				6B9259D31FE2631B00B41E15 /* Player.h in CopyFiles */,
 				6B9259BD1FE2629800B41E15 /* JTPlayer.h in CopyFiles */,
 			);
@@ -66,6 +69,8 @@
 		6B9259CB1FE262B600B41E15 /* PlayerDataRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerDataRequest.m; sourceTree = "<group>"; };
 		6B9259CC1FE262B600B41E15 /* PlayerData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerData.h; sourceTree = "<group>"; };
 		6B9259CD1FE262B600B41E15 /* PlayerAssetLoaderDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerAssetLoaderDelegate.m; sourceTree = "<group>"; };
+		6BB7A8221FE26F8600ED8655 /* PlayerFileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerFileManager.h; sourceTree = "<group>"; };
+		6BB7A8231FE26F8600ED8655 /* PlayerFileManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerFileManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +112,8 @@
 				6B9259C71FE262B600B41E15 /* PlayerData.m */,
 				6B9259CA1FE262B600B41E15 /* PlayerDataRequest.h */,
 				6B9259CB1FE262B600B41E15 /* PlayerDataRequest.m */,
+				6BB7A8221FE26F8600ED8655 /* PlayerFileManager.h */,
+				6BB7A8231FE26F8600ED8655 /* PlayerFileManager.m */,
 				6B9259C41FE262B500B41E15 /* PlayerLogger.h */,
 			);
 			path = JTPlayer;
@@ -209,6 +216,7 @@
 				6B9259D11FE262B600B41E15 /* PlayerDataRequest.m in Sources */,
 				6B9259D21FE262B600B41E15 /* PlayerAssetLoaderDelegate.m in Sources */,
 				6B9259CE1FE262B600B41E15 /* Player.m in Sources */,
+				6BB7A8241FE26F8600ED8655 /* PlayerFileManager.m in Sources */,
 				6B9259CF1FE262B600B41E15 /* PlayerData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
