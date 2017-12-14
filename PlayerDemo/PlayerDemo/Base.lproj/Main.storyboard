@@ -18,25 +18,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wqu-Vw-Y1B" customClass="PlayerPreview">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="glA-XO-OtA" customClass="PlayerPreview">
                                 <rect key="frame" x="0.0" y="227.5" width="375" height="211"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="wqu-Vw-Y1B" secondAttribute="height" multiplier="16:9" id="Mc6-6j-uhH"/>
+                                    <constraint firstAttribute="width" secondItem="glA-XO-OtA" secondAttribute="height" multiplier="16:9" id="VGq-PZ-ElK"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="wqu-Vw-Y1B" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="6Wv-n8-amU"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="wqu-Vw-Y1B" secondAttribute="trailing" id="Ahc-cc-tss"/>
-                            <constraint firstItem="wqu-Vw-Y1B" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="DAY-6w-xAR"/>
-                            <constraint firstItem="wqu-Vw-Y1B" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="HUI-TU-Hhs"/>
+                            <constraint firstItem="glA-XO-OtA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="bOD-0K-Bf4"/>
+                            <constraint firstItem="glA-XO-OtA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="gXP-h3-60M"/>
+                            <constraint firstItem="glA-XO-OtA" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="jvJ-fp-nTI"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="glA-XO-OtA" secondAttribute="trailing" id="xjG-0L-qJg"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="playerPreview" destination="wqu-Vw-Y1B" id="tes-Eb-0GB"/>
+                        <outlet property="playerPreview" destination="glA-XO-OtA" id="pGa-w9-Fqk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
