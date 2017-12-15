@@ -1,24 +1,24 @@
 //
-//  ViewController.m
+//  AVPlayerLayerViewController.m
 //  PlayerDemo
 //
 //  Created by JT Ma on 14/12/2017.
 //  Copyright © 2017 JT (ma.jiangtao.86@gmail.com). All rights reserved.
 //
 
-#import "ViewController.h"
+#import "AVPlayerLayerViewController.h"
 #import "PlayerPreview.h"
 
 #import <JTPlayer/JTPlayer.h>
 
-@interface ViewController ()
+@interface AVPlayerLayerViewController ()
 
 @property (weak, nonatomic) IBOutlet PlayerPreview *playerPreview;
 @property (nonatomic, strong) Player *player;
 
 @end
 
-@implementation ViewController
+@implementation AVPlayerLayerViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -30,6 +30,10 @@
     NSURL *url = [NSURL URLWithString:videoAddress];
     [self.player play:url];
     self.player.loop = YES;
+}
+
+-(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
+    
 }
 
 @end

@@ -18,7 +18,10 @@ typedef enum : NSUInteger {
 
 @protocol PlayerItemOutputPixelBufferDelegate <NSObject>
 
+@required
 - (void)playerItemOutput:(AVPlayerItemOutput *)itemOutput didOutputPixelBuffer:(CVPixelBufferRef)pixelBuffer;
+@optional
+- (void)playerItemReadyToPlay:(AVPlayerItem *)item;
 
 @end
 
@@ -31,9 +34,10 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) BOOL isPlaying;
 @property (nonatomic, assign) BOOL isCached;
 @property (nonatomic, assign) PreferredTransformOrientation preferredTransformOrientation;
+@property (nonatomic, assign) CGAffineTransform preferredTransform;
+@property (nonatomic, assign) int outputFormatType;
 
 @property (nonatomic, weak) id<PlayerItemOutputPixelBufferDelegate> delegate;
-
 - (void)play:(NSURL *)url;
 - (void)resume;
 - (void)pause;

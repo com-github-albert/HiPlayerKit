@@ -169,6 +169,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     for (AVAssetTrack *track in asset.tracks) {
         if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
             CGAffineTransform transform = track.preferredTransform;
+            self.preferredTransform = transform;
             if (transform.a == 0 && transform.b == 1.0 && transform.c == -1.0 && transform.d == 0) {
                 self.preferredTransformOrientation = PreferredTransformOrientationPortrait;
             } else if (transform.a == 0 && transform.b == -1.0 && transform.c == 1.0 && transform.d == 0) {
@@ -205,8 +206,10 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                                              selector:@selector(playerItemDidReachEnd:)
                                                  name:AVPlayerItemDidPlayToEndTimeNotification
                                                object:self.item];
-    
-    self.itemOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:@{(id)kCVPixelBufferPixelFormatTypeKey:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA]}];
+    if (self.outputFormatType <= 0) {
+        self.outputFormatType = kCVPixelFormatType_32BGRA;
+    }
+    self.itemOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:@{(id)kCVPixelBufferPixelFormatTypeKey:[NSNumber numberWithInt:self.outputFormatType]}];
     [self.item addOutput:self.itemOutput];
     
     if (self.player.currentItem != self.item) {
@@ -258,6 +261,9 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                 break;
             case AVPlayerItemStatusReadyToPlay:{
                 NSLog(@"Status readyToPlay");
+                if([self.delegate respondsToSelector:@selector(playerItemReadyToPlay:)]) {
+                    [self.delegate playerItemReadyToPlay:playerItem];
+                }
                 [self resume];
             }
                 break;
