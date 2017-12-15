@@ -27,10 +27,6 @@
     self.player.outputFormatType = kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange;
     self.player.loop = YES;
     
-    self.playerPreview.chromaThreshold = 1;
-    self.playerPreview.lumaThreshold = 1;
-    [self.playerPreview setupGL];
-    
     NSString *videoAddress = @"https://images.apple.com/media/cn/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-cn-20170912_1280x720h.mp4";
     NSURL *url = [NSURL URLWithString:videoAddress];
     [self.player play:url];
@@ -39,8 +35,11 @@
 #pragma mark <PlayerItemOutputPixelBufferDelegate>
 
 - (void)playerItemReadyToPlay:(AVPlayerItem *)item {
+    self.playerPreview.chromaThreshold = 1;
+    self.playerPreview.lumaThreshold = 1;
     self.playerPreview.preferredRotation = -1 * atan2(self.player.preferredTransform.b, self.player.preferredTransform.a);
     self.playerPreview.presentationRect = item.presentationSize;
+    [self.playerPreview setupGL];
 }
 
 - (void)playerItemOutput:(AVPlayerItemOutput *)itemOutput didOutputPixelBuffer:(CVPixelBufferRef)pixelBuffer {
