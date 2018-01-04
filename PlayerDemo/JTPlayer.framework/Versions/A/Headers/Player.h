@@ -8,6 +8,8 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+@protocol PlayerDelegate;
+
 typedef enum : NSUInteger {
     PreferredTransformOrientationPortrait,
     PreferredTransformOrientationPortraitUpsideDown,
@@ -15,15 +17,6 @@ typedef enum : NSUInteger {
     PreferredTransformOrientationLandscapeLeft,
     PreferredTransformOrientationUnknown,
 } PreferredTransformOrientation;
-
-@protocol PlayerItemOutputPixelBufferDelegate <NSObject>
-
-@required
-- (void)playerItemOutput:(AVPlayerItemOutput *)itemOutput didOutputPixelBuffer:(CVPixelBufferRef)pixelBuffer;
-@optional
-- (void)playerItemReadyToPlay:(AVPlayerItem *)item;
-
-@end
 
 @interface Player : NSObject
 
@@ -37,7 +30,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) CGAffineTransform preferredTransform;
 @property (nonatomic, assign) int outputFormatType;
 
-@property (nonatomic, weak) id<PlayerItemOutputPixelBufferDelegate> delegate;
+@property (nonatomic, weak) id<PlayerDelegate> delegate;
 - (void)play:(NSURL *)url;
 - (void)resume;
 - (void)pause;

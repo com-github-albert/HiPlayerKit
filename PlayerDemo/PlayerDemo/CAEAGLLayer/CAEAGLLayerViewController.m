@@ -10,7 +10,7 @@
 #import "APLEAGLView.h"
 #import <JTPlayer/JTPlayer.h>
 
-@interface CAEAGLLayerViewController () <PlayerItemOutputPixelBufferDelegate>
+@interface CAEAGLLayerViewController () <PlayerDelegate>
 
 @property (weak, nonatomic) IBOutlet APLEAGLView *playerPreview;
 @property (nonatomic, strong) Player *player;
@@ -34,15 +34,15 @@
 
 #pragma mark <PlayerItemOutputPixelBufferDelegate>
 
-- (void)playerItemReadyToPlay:(AVPlayerItem *)item {
+- (void)playerReadyToPlay:(AVPlayer *)player {
     self.playerPreview.chromaThreshold = 1;
     self.playerPreview.lumaThreshold = 1;
     self.playerPreview.preferredRotation = -1 * atan2(self.player.preferredTransform.b, self.player.preferredTransform.a);
-    self.playerPreview.presentationRect = item.presentationSize;
+    self.playerPreview.presentationRect = player.currentItem.presentationSize;
     [self.playerPreview setupGL];
 }
 
-- (void)playerItemOutput:(AVPlayerItemOutput *)itemOutput didOutputPixelBuffer:(CVPixelBufferRef)pixelBuffer {
+- (void)player:(AVPlayer *)player didOutputPixelBuffer:(CVPixelBufferRef)pixelBuffer {
     [self.playerPreview displayPixelBuffer:pixelBuffer];
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "Player.h"
+#import "PlayerDelegate.h"
 #import "PlayerAssetLoaderDelegate.h"
 
 #import "PlayerFileManager.h"
@@ -261,8 +262,8 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                 break;
             case AVPlayerItemStatusReadyToPlay:{
                 NSLog(@"Status readyToPlay");
-                if([self.delegate respondsToSelector:@selector(playerItemReadyToPlay:)]) {
-                    [self.delegate playerItemReadyToPlay:playerItem];
+                if([self.delegate respondsToSelector:@selector(playerReadyToPlay:)]) {
+                    [self.delegate playerReadyToPlay:self.player];
                 }
                 [self resume];
             }
@@ -315,8 +316,8 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
         const CVPixelBufferRef pixelBuffer = [self.itemOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:nil];
         if (pixelBuffer) {
             CVPixelBufferLockBaseAddress(pixelBuffer, 0);
-            if([self.delegate respondsToSelector:@selector(playerItemOutput:didOutputPixelBuffer:)]) {
-                [self.delegate playerItemOutput:self.itemOutput didOutputPixelBuffer:pixelBuffer];
+            if([self.delegate respondsToSelector:@selector(player:didOutputPixelBuffer:)]) {
+                [self.delegate player:self.player didOutputPixelBuffer:pixelBuffer];
             }
             CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
             CVBufferRelease(pixelBuffer);

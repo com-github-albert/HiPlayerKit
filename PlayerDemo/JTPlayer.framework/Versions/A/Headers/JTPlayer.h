@@ -7,4 +7,5 @@
 //
 
 #import "Player.h"
+#import "PlayerDelegate.h"
 #import "PlayerFileManager.h"
