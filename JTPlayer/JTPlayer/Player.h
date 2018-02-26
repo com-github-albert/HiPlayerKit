@@ -24,13 +24,14 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, assign) float volume;
 @property (nonatomic, assign) BOOL loop;
-@property (nonatomic, assign) BOOL isPlaying;
-@property (nonatomic, assign) BOOL isCached;
-@property (nonatomic, assign) PreferredTransformOrientation preferredTransformOrientation;
-@property (nonatomic, assign) CGAffineTransform preferredTransform;
+@property (nonatomic, assign, readonly) BOOL isPlaying;
+@property (nonatomic, assign, readonly) BOOL isCached;
+@property (nonatomic, assign, readonly) PreferredTransformOrientation preferredTransformOrientation;
+@property (nonatomic, assign, readonly) CGAffineTransform preferredTransform;
 @property (nonatomic, assign) int outputFormatType;
 
 @property (nonatomic, weak) id<PlayerDelegate> delegate;
+
 - (void)play:(NSURL *)url;
 - (void)resume;
 - (void)pause;

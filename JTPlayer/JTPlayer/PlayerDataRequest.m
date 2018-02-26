@@ -13,7 +13,7 @@
 @interface PlayerDataRequest () <NSURLSessionDelegate, NSURLSessionDataDelegate>
 
 @property (nonatomic, strong) NSURLSession *session;
-@property (nonatomic, strong) PlayerData *playerModel;
+@property (nonatomic, strong) PlayerData *playerData;
 
 @property (nonatomic, assign) NSInteger requestOffset;
 @property (nonatomic, assign) NSInteger downloadedLength;
@@ -50,35 +50,35 @@
     NSURL *url = [NSURL URLWithString:urlString];
     if (!url) return;
     
-    if (! self.playerModel) {
-        self.playerModel = [[PlayerData alloc] initWithURL:urlString];
+    if (! self.playerData) {
+        self.playerData = [[PlayerData alloc] initWithURL:urlString];
     }
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
-    if (self.playerModel.isDownloading) return;
+    if (self.playerData.isDownloading) return;
     
     if (offset >= 0) {
         NSString *range = [NSString stringWithFormat:@"bytes:%zd-", offset];
         [request setValue:range forHTTPHeaderField:@"Range"];
     }
     
-    self.playerModel.task = [self.session dataTaskWithRequest:request];
+    self.playerData.task = [self.session dataTaskWithRequest:request];
     
-    [self.playerModel.task resume];
-    self.playerModel.isDownloading = YES;
+    [self.playerData.task resume];
+    self.playerData.isDownloading = YES;
     
     NSString *cachePath = [self.cacheDirectory stringByAppendingPathComponent:url.lastPathComponent];
-    self.playerModel.location = [NSURL fileURLWithPath:cachePath isDirectory:NO];
+    self.playerData.location = [NSURL fileURLWithPath:cachePath isDirectory:NO];
     [PlayerFileManager createFileAtPath:cachePath];
     self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:cachePath];
 }
 
 - (void)cancel:(NSString *)urlString {
-    if (self.playerModel && self.playerModel.isDownloading) {
-        self.playerModel.isDownloading = NO;
-        [self.playerModel.task cancel];
-        self.self.playerModel = nil;
+    if (self.playerData && self.playerData.isDownloading) {
+        self.playerData.isDownloading = NO;
+        [self.playerData.task cancel];
+        self.self.playerData = nil;
     }
 }
 
@@ -100,13 +100,13 @@ didReceiveResponse:(NSURLResponse *)response
         return;
     }
     
-    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     NSDictionary *allHeaderFields = (NSDictionary *)[httpResponse allHeaderFields];
     NSInteger length = [[allHeaderFields valueForKey:@"Content-Length"] integerValue];
     NSString *type = [allHeaderFields valueForKey:@"Content-Type"];
     
     self.contentLength = length > 0 ? length : (NSInteger)httpResponse.expectedContentLength;
-    self.contentType = type ? type : @"video/mp4";
+    self.contentType = type ?: @"video/mp4";
 }
 
 - (void)URLSession:(NSURLSession *)session
@@ -120,7 +120,7 @@ didReceiveResponse:(NSURLResponse *)response
     self.downloadedLength += data.length;
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(playerDataRequest:didReceiveData:receiveDataToURL:)]) {
-        [self.delegate playerDataRequest:self didReceiveData:data receiveDataToURL:self.playerModel.location];
+        [self.delegate playerDataRequest:self didReceiveData:data receiveDataToURL:self.playerData.location];
     }
 }
 
@@ -136,13 +136,13 @@ didCompleteWithError:(nullable NSError *)error {
         }
     } else {
         if (self.delegate && [self.delegate respondsToSelector:@selector(playerDataRequest:didFinishDownloadingToURL:)]) {
-            [self.delegate playerDataRequest:self didFinishDownloadingToURL:self.playerModel.location];
+            [self.delegate playerDataRequest:self didFinishDownloadingToURL:self.playerData.location];
         }
     }
     
-    if (self.playerModel) {
-        self.playerModel.isDownloading = NO;
-        self.playerModel = nil;
+    if (self.playerData) {
+        self.playerData.isDownloading = NO;
+        self.playerData = nil;
     }
 }
 

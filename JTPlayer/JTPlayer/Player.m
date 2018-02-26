@@ -39,6 +39,11 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 @property (nonatomic, strong) NSString *destDirectory;
 @property (nonatomic, strong) NSString *cacheDirectory;
 
+@property (nonatomic, assign) BOOL isPlaying;
+@property (nonatomic, assign) BOOL isCached;
+@property (nonatomic, assign) PreferredTransformOrientation preferredTransformOrientation;
+@property (nonatomic, assign) CGAffineTransform preferredTransform;
+
 @end
 
 @interface Player (FrameOutput)
@@ -231,7 +236,9 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                          context:kPlayerRateObservationContext];
         
         __weak typeof(self) weakSelf = self;
-        self.itemObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 30) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        self.itemObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 30)
+                                                                      queue:dispatch_get_main_queue()
+                                                                 usingBlock:^(CMTime time) {
             if (weakSelf.isPlaying) {
                 [weakSelf frame];
             }
@@ -256,11 +263,11 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
         AVPlayerItem *playerItem = (AVPlayerItem *)object;
         AVPlayerItemStatus status = playerItem.status;
         switch (status) {
-            case AVPlayerItemStatusUnknown:{
+            case AVPlayerItemStatusUnknown: {
                 NSLog(@"Status unknown");
             }
                 break;
-            case AVPlayerItemStatusReadyToPlay:{
+            case AVPlayerItemStatusReadyToPlay: {
                 NSLog(@"Status readyToPlay");
                 if([self.delegate respondsToSelector:@selector(playerReadyToPlay:)]) {
                     [self.delegate playerReadyToPlay:self.player];
@@ -268,7 +275,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                 [self resume];
             }
                 break;
-            case AVPlayerItemStatusFailed:{
+            case AVPlayerItemStatusFailed: {
                 NSLog(@"Status failed");
                 [self pause];
                 [self assetFailedToPrepareForPlayback:playerItem.error];
@@ -311,16 +318,16 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 @implementation Player (FrameOutput)
 
 - (void)frame {
-    const CMTime currentTime = self.item.currentTime;
-    if ([self.itemOutput hasNewPixelBufferForItemTime:currentTime]) {
-        const CVPixelBufferRef pixelBuffer = [self.itemOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:nil];
-        if (pixelBuffer) {
-            CVPixelBufferLockBaseAddress(pixelBuffer, 0);
-            if([self.delegate respondsToSelector:@selector(player:didOutputPixelBuffer:)]) {
+    if([self.delegate respondsToSelector:@selector(player:didOutputPixelBuffer:)]) {
+        const CMTime currentTime = self.item.currentTime;
+        if ([self.itemOutput hasNewPixelBufferForItemTime:currentTime]) {
+            const CVPixelBufferRef pixelBuffer = [self.itemOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:nil];
+            if (pixelBuffer) {
+                CVPixelBufferLockBaseAddress(pixelBuffer, 0);
                 [self.delegate player:self.player didOutputPixelBuffer:pixelBuffer];
+                CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+                CVBufferRelease(pixelBuffer);
             }
-            CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
-            CVBufferRelease(pixelBuffer);
         }
     }
 }

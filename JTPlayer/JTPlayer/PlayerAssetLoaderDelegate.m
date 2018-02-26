@@ -22,20 +22,22 @@
 @property (nonatomic, strong) NSMutableArray *pendingRequests;
 
 @property (nonatomic, strong) NSString *originScheme;
-@property (nonatomic, strong) NSLock* lock;
+@property (nonatomic) dispatch_semaphore_t pendingSemaphore;
 
 @end
 
 @implementation PlayerAssetLoaderDelegate
 
-- (instancetype)initWithOriginScheme:(NSString *)scheme cacheDirectory:(NSString *)cacheDirectory destDirectory:(NSString *)destDirectory {
+- (instancetype)initWithOriginScheme:(NSString *)scheme
+                      cacheDirectory:(NSString *)cacheDirectory
+                       destDirectory:(NSString *)destDirectory {
     self = [super init];
     if (self) {
-        self.pendingRequests = [NSMutableArray array];
         self.cacheDirectory = cacheDirectory;
         self.destDirectory = destDirectory;
         self.originScheme = scheme;
-        self.lock = [[NSLock alloc] init];
+        self.pendingRequests = [NSMutableArray array];
+        self.pendingSemaphore = dispatch_semaphore_create(1);
     }
     return self;
 }
@@ -49,19 +51,19 @@
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest {
     NSLog(@"Assetloader: loading");
-    [self.lock lock];
+    dispatch_semaphore_wait(self.pendingSemaphore, DISPATCH_TIME_FOREVER);
     [self.pendingRequests addObject:loadingRequest];
+    dispatch_semaphore_signal(self.pendingSemaphore);
     [self loadingRequest:loadingRequest];
-    [self.lock unlock];
     return YES;
 }
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
     NSLog(@"Assetloader: cancel");
-    [self.lock lock];
+    dispatch_semaphore_wait(self.pendingSemaphore, DISPATCH_TIME_FOREVER);
     [self.pendingRequests removeObject:loadingRequest];
-    [self.lock unlock];
+    dispatch_semaphore_signal(self.pendingSemaphore);
 }
 
 #pragma mark - PlayerDataRequestDelegate
@@ -69,9 +71,7 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
 - (void)playerDataRequest:(PlayerDataRequest *)dataRequest
            didReceiveData:(NSData *)data
          receiveDataToURL:(NSURL *)location {
-    [self.lock lock];
-    [self internalPendingRequestsWithCachePath:location];
-    [self.lock unlock];
+    [self processRequestsWithCacheLocation:location];
 }
 
 - (void)playerDataRequest:(PlayerDataRequest *)dataRequest
@@ -104,7 +104,7 @@ didFinishDownloadingToURL:(NSURL *)location {
         if (loadingRequest.dataRequest.requestedOffset >= self.dataRequest.requestOffset) {
             NSString *locationString = [self.cacheDirectory stringByAppendingPathComponent:loadingRequest.request.URL.lastPathComponent];
             NSURL *location = [NSURL fileURLWithPath:locationString];
-            [self internalPendingRequestsWithCachePath:location];
+            [self processRequestsWithCacheLocation:location];
         }
     } else {
         self.dataRequest = [[PlayerDataRequest alloc] initWithCacheDirectory:self.cacheDirectory];
@@ -131,12 +131,13 @@ didFinishDownloadingToURL:(NSURL *)location {
     [self.dataRequest cancel:url.absoluteString];
 }
 
-- (void)internalPendingRequestsWithCachePath:(NSURL *)location {
+- (void)processRequestsWithCacheLocation:(NSURL *)location {
+    dispatch_semaphore_wait(self.pendingSemaphore, DISPATCH_TIME_FOREVER);
     NSMutableArray *requestsCompleted = [NSMutableArray array];
     for (AVAssetResourceLoadingRequest *loadingRequest in self.pendingRequests) {
         @autoreleasepool {
             if (loadingRequest && !loadingRequest.isFinished && !loadingRequest.isCancelled) {
-                [self fillInContentInformation:loadingRequest.contentInformationRequest];
+                [self loadingContentInformation:loadingRequest.contentInformationRequest];
                 BOOL didRespondFinished = [self respondWithDataForRequest:loadingRequest readCacheDataFromURL:location];
                 if (didRespondFinished) {
                     [requestsCompleted addObject:loadingRequest];
@@ -146,11 +147,12 @@ didFinishDownloadingToURL:(NSURL *)location {
     }
     if (requestsCompleted.count > 0) {
         NSLog(@"Assetloader: finished");
-        [self.pendingRequests removeObjectsInArray:[requestsCompleted copy]];
+        [self.pendingRequests removeObjectsInArray:requestsCompleted];
     }
+    dispatch_semaphore_signal(self.pendingSemaphore);
 }
 
-- (void)fillInContentInformation:(AVAssetResourceLoadingContentInformationRequest *)contentInformationRequest {
+- (void)loadingContentInformation:(AVAssetResourceLoadingContentInformationRequest *)contentInformationRequest {
     NSString *cType = self.dataRequest.contentType;
     CFStringRef contentType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(cType), NULL);
     contentInformationRequest.byteRangeAccessSupported = YES;

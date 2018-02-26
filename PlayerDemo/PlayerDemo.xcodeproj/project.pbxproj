@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B6D2E362043ACDC00F2A585 /* libJTPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B6D2E372043ACDC00F2A585 /* libJTPlayer.a */; };
 		6B9259F31FE2697900B41E15 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9259F21FE2697900B41E15 /* AppDelegate.m */; };
 		6B9259F61FE2697900B41E15 /* AVPlayerLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9259F51FE2697900B41E15 /* AVPlayerLayerViewController.m */; };
 		6B9259F91FE2697900B41E15 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B9259F71FE2697900B41E15 /* Main.storyboard */; };
 		6B9259FB1FE2697900B41E15 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B9259FA1FE2697900B41E15 /* Assets.xcassets */; };
 		6B9259FE1FE2697900B41E15 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B9259FC1FE2697900B41E15 /* LaunchScreen.storyboard */; };
 		6B925A011FE2697900B41E15 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B925A001FE2697900B41E15 /* main.m */; };
-		6B925A091FE269CF00B41E15 /* JTPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B925A071FE269C300B41E15 /* JTPlayer.framework */; };
 		6B925A0F1FE26B8100B41E15 /* PlayerPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B925A0E1FE26B8100B41E15 /* PlayerPreview.m */; };
 		6BBDD5961FE36DEB00406037 /* APLEAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBDD5911FE36DEA00406037 /* APLEAGLView.m */; };
 		6BBDD5991FE370AF00406037 /* CAEAGLLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBDD5981FE370AF00406037 /* CAEAGLLayerViewController.m */; };
@@ -22,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6B6D2E372043ACDC00F2A585 /* libJTPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libJTPlayer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B9259EE1FE2697900B41E15 /* PlayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B9259F11FE2697900B41E15 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6B9259F21FE2697900B41E15 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -32,7 +33,6 @@
 		6B9259FD1FE2697900B41E15 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6B9259FF1FE2697900B41E15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6B925A001FE2697900B41E15 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		6B925A071FE269C300B41E15 /* JTPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = JTPlayer.framework; sourceTree = "<group>"; };
 		6B925A0D1FE26B8100B41E15 /* PlayerPreview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerPreview.h; sourceTree = "<group>"; };
 		6B925A0E1FE26B8100B41E15 /* PlayerPreview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerPreview.m; sourceTree = "<group>"; };
 		6BBDD5911FE36DEA00406037 /* APLEAGLView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APLEAGLView.m; sourceTree = "<group>"; };
@@ -48,7 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B925A091FE269CF00B41E15 /* JTPlayer.framework in Frameworks */,
+				6B6D2E362043ACDC00F2A585 /* libJTPlayer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,7 +58,6 @@
 		6B9259E51FE2697900B41E15 = {
 			isa = PBXGroup;
 			children = (
-				6B925A071FE269C300B41E15 /* JTPlayer.framework */,
 				6B9259F01FE2697900B41E15 /* PlayerDemo */,
 				6B9259EF1FE2697900B41E15 /* Products */,
 				6B925A081FE269CF00B41E15 /* Frameworks */,
@@ -89,6 +88,7 @@
 		6B925A081FE269CF00B41E15 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6B6D2E372043ACDC00F2A585 /* libJTPlayer.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
