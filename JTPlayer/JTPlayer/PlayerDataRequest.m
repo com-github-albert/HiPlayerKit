@@ -54,9 +54,9 @@
         self.playerData = [[PlayerData alloc] initWithURL:urlString];
     }
 
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    
     if (self.playerData.isDownloading) return;
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     if (offset >= 0) {
         NSString *range = [NSString stringWithFormat:@"bytes:%zd-", offset];

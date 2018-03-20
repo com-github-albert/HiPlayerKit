@@ -14,14 +14,20 @@
 #import "PlayerLogger.h"
 
 /* Asset keys */
-NSString * const kPlayableKey        = @"playable";
+NSString * const kPlayableKey       = @"playable";
 
 /* PlayerItem keys */
 NSString * const kStatusKey         = @"status";
 
 /* AVPlayer keys */
-NSString * const kRateKey            = @"rate";
+NSString * const kRateKey           = @"rate";
 NSString * const kCurrentItemKey    = @"currentItem";
+
+/* URL Schemes */
+NSString * const kFileScheme        = @"file";
+NSString * const kHttpScheme        = @"http";
+NSString * const kHttpsScheme       = @"https";
+NSString * const kCustomScheme      = @"streaming";
 
 static void *kPlayerStatusObservationContext = &kPlayerStatusObservationContext;
 static void *kPlayerRateObservationContext = &kPlayerRateObservationContext;
@@ -40,13 +46,12 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 @property (nonatomic, strong) NSString *cacheDirectory;
 
 @property (nonatomic, assign) BOOL isPlaying;
-@property (nonatomic, assign) BOOL isCached;
 @property (nonatomic, assign) PreferredTransformOrientation preferredTransformOrientation;
 @property (nonatomic, assign) CGAffineTransform preferredTransform;
 
 @end
 
-@interface Player (FrameOutput)
+@interface Player (PixelBuffer)
 
 - (void)frame;
 
@@ -88,19 +93,25 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     if (url) {
         AVURLAsset *asset;
         
-        NSString* videoPath = [self.destDirectory stringByAppendingPathComponent:url.lastPathComponent];
-        BOOL isDirectory;
-        BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:videoPath isDirectory:&isDirectory];
-        if (isExist && !isDirectory) {
-            url = [NSURL fileURLWithPath:videoPath isDirectory:NO];
+        if ([url.scheme isEqualToString:kHttpScheme] ||
+            [url.scheme isEqualToString:kHttpsScheme]) {
+            NSString* videoPath = [self.destDirectory stringByAppendingPathComponent:url.lastPathComponent];
+            BOOL isDirectory;
+            BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:videoPath isDirectory:&isDirectory];
+            if (isExist && !isDirectory) {
+                url = [NSURL fileURLWithPath:videoPath isDirectory:NO];
+                asset = [AVURLAsset URLAssetWithURL:url options:nil];
+            } else {
+                NSString *scheme = url.scheme;
+                NSURL *schemeURL = [self customSchemeWithURL:url];
+                asset = [AVURLAsset URLAssetWithURL:schemeURL options:nil];
+                [self configDelegates:asset originScheme:scheme];
+            }
+        } else if ([url.scheme isEqualToString:kFileScheme]) {
             asset = [AVURLAsset URLAssetWithURL:url options:nil];
-            self.isCached = YES;
         } else {
-            NSString *scheme = url.scheme;
-            NSURL *schemeURL = [self getSchemeVideoURL:url];
-            asset = [AVURLAsset URLAssetWithURL:schemeURL options:nil];
-            [self configDelegates:asset originScheme:scheme];
-            self.isCached = NO;
+            url = [NSURL fileURLWithPath:url.path isDirectory:NO];
+            asset = [AVURLAsset URLAssetWithURL:url options:nil];
         }
         
         /*
@@ -307,15 +318,15 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     NSLog(@"Error to prepare for playback: %@, reson: %@", error.localizedDescription, error.localizedFailureReason);
 }
 
-- (NSURL *)getSchemeVideoURL:(NSURL *)url {
+- (NSURL *)customSchemeWithURL:(NSURL *)url {
     NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
-    components.scheme = @"streaming";
+    components.scheme = kCustomScheme;
     return [components URL];
 }
 
 @end
 
-@implementation Player (FrameOutput)
+@implementation Player (PixelBuffer)
 
 - (void)frame {
     if([self.delegate respondsToSelector:@selector(player:didOutputPixelBuffer:)]) {

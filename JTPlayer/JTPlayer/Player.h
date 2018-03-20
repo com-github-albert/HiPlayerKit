@@ -25,7 +25,6 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) float volume;
 @property (nonatomic, assign) BOOL loop;
 @property (nonatomic, assign, readonly) BOOL isPlaying;
-@property (nonatomic, assign, readonly) BOOL isCached;
 @property (nonatomic, assign, readonly) PreferredTransformOrientation preferredTransformOrientation;
 @property (nonatomic, assign, readonly) CGAffineTransform preferredTransform;
 @property (nonatomic, assign) int outputFormatType;

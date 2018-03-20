@@ -20,9 +20,9 @@
 
 @property (nonatomic, strong) PlayerDataRequest *dataRequest;
 @property (nonatomic, strong) NSMutableArray *pendingRequests;
+@property (nonatomic) dispatch_semaphore_t pendingSemaphore;
 
 @property (nonatomic, strong) NSString *originScheme;
-@property (nonatomic) dispatch_semaphore_t pendingSemaphore;
 
 @end
 
