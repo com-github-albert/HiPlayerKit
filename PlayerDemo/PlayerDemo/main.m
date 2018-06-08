@@ -2,8 +2,8 @@
 //  main.m
 //  PlayerDemo
 //
-//  Created by JT Ma on 14/12/2017.
-//  Copyright © 2017 JT (ma.jiangtao.86@gmail.com). All rights reserved.
+//  Created by Jett on 14/12/2017.
+//  Copyright © 2018 <https://github.com/mutating>. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -14,3 +14,4 @@ int main(int argc, char * argv[]) {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }
 }
+
