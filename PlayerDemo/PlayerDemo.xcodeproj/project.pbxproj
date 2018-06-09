@@ -14,12 +14,12 @@
 		6B9259FE1FE2697900B41E15 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B9259FC1FE2697900B41E15 /* LaunchScreen.storyboard */; };
 		6B925A011FE2697900B41E15 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B925A001FE2697900B41E15 /* main.m */; };
 		6B925A0F1FE26B8100B41E15 /* PlayerPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B925A0E1FE26B8100B41E15 /* PlayerPreview.m */; };
+		6BBCBC9520CA8C5500E2229E /* FrameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCBC9420CA8C5500E2229E /* FrameViewController.m */; };
 		6BBDD5961FE36DEB00406037 /* APLEAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBDD5911FE36DEA00406037 /* APLEAGLView.m */; };
 		6BBDD5991FE370AF00406037 /* CAEAGLLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBDD5981FE370AF00406037 /* CAEAGLLayerViewController.m */; };
 		6BBDD59A1FE3797A00406037 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 6BBDD5941FE36DEA00406037 /* Shader.fsh */; };
 		6BBDD59B1FE3797D00406037 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 6BBDD5951FE36DEA00406037 /* Shader.vsh */; };
 		6BCF500820C908FB00D7EB72 /* libPlayerKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BCF500920C908FB00D7EB72 /* libPlayerKit.a */; };
-		6BCF501C20C925A900D7EB72 /* HookDealloc.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCF501B20C925A900D7EB72 /* HookDealloc.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +36,8 @@
 		6B925A001FE2697900B41E15 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6B925A0D1FE26B8100B41E15 /* PlayerPreview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerPreview.h; sourceTree = "<group>"; };
 		6B925A0E1FE26B8100B41E15 /* PlayerPreview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerPreview.m; sourceTree = "<group>"; };
+		6BBCBC9320CA8C5500E2229E /* FrameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FrameViewController.h; sourceTree = "<group>"; };
+		6BBCBC9420CA8C5500E2229E /* FrameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FrameViewController.m; sourceTree = "<group>"; };
 		6BBDD5911FE36DEA00406037 /* APLEAGLView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APLEAGLView.m; sourceTree = "<group>"; };
 		6BBDD5921FE36DEA00406037 /* APLEAGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APLEAGLView.h; sourceTree = "<group>"; };
 		6BBDD5941FE36DEA00406037 /* Shader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Shader.fsh; sourceTree = "<group>"; };
@@ -43,8 +45,6 @@
 		6BBDD5971FE370AF00406037 /* CAEAGLLayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CAEAGLLayerViewController.h; sourceTree = "<group>"; };
 		6BBDD5981FE370AF00406037 /* CAEAGLLayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CAEAGLLayerViewController.m; sourceTree = "<group>"; };
 		6BCF500920C908FB00D7EB72 /* libPlayerKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayerKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		6BCF501A20C925A900D7EB72 /* HookDealloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HookDealloc.h; sourceTree = "<group>"; };
-		6BCF501B20C925A900D7EB72 /* HookDealloc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HookDealloc.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,11 +81,10 @@
 			children = (
 				6B9259F11FE2697900B41E15 /* AppDelegate.h */,
 				6B9259F21FE2697900B41E15 /* AppDelegate.m */,
-				6BCF501A20C925A900D7EB72 /* HookDealloc.h */,
-				6BCF501B20C925A900D7EB72 /* HookDealloc.m */,
 				6B9259F71FE2697900B41E15 /* Main.storyboard */,
 				6BBDD59C1FE37A5B00406037 /* AVPlayerLayer */,
 				6BBDD59D1FE37A6900406037 /* CAEAGLLayer */,
+				6BBCBC9220CA8C3F00E2229E /* Frame */,
 				6BBDD59E1FE37ABE00406037 /* Support File */,
 			);
 			path = PlayerDemo;
@@ -98,6 +97,15 @@
 				6B6D2E372043ACDC00F2A585 /* libJTPlayer.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6BBCBC9220CA8C3F00E2229E /* Frame */ = {
+			isa = PBXGroup;
+			children = (
+				6BBCBC9320CA8C5500E2229E /* FrameViewController.h */,
+				6BBCBC9420CA8C5500E2229E /* FrameViewController.m */,
+			);
+			path = Frame;
 			sourceTree = "<group>";
 		};
 		6BBDD5931FE36DEA00406037 /* Shaders */ = {
@@ -169,7 +177,7 @@
 		6B9259E61FE2697900B41E15 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "<https://github.com/mutating>";
 				TargetAttributes = {
 					6B9259ED1FE2697900B41E15 = {
@@ -220,7 +228,7 @@
 				6B925A0F1FE26B8100B41E15 /* PlayerPreview.m in Sources */,
 				6BBDD5961FE36DEB00406037 /* APLEAGLView.m in Sources */,
 				6BBDD5991FE370AF00406037 /* CAEAGLLayerViewController.m in Sources */,
-				6BCF501C20C925A900D7EB72 /* HookDealloc.m in Sources */,
+				6BBCBC9520CA8C5500E2229E /* FrameViewController.m in Sources */,
 				6B925A011FE2697900B41E15 /* main.m in Sources */,
 				6B9259F31FE2697900B41E15 /* AppDelegate.m in Sources */,
 			);
@@ -262,6 +270,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -269,6 +278,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -317,6 +327,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -324,6 +335,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -357,14 +369,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C94329WK33;
+				DEVELOPMENT_TEAM = 9Q2JNSZV5H;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = PlayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hiscene.PlayerDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.PlayerKit.PlayerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -375,14 +387,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C94329WK33;
+				DEVELOPMENT_TEAM = 9Q2JNSZV5H;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = PlayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hiscene.PlayerDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.PlayerKit.PlayerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
