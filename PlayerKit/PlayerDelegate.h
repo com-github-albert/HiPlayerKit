@@ -8,6 +8,8 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol PlayerDelegate <NSObject>
 
 @optional
@@ -17,3 +19,5 @@
 - (void)player:(AVPlayer *)player didOutputPixelBuffer:(CVPixelBufferRef)pixelBuffer;
 
 @end
+
+NS_ASSUME_NONNULL_END
