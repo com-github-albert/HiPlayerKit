@@ -50,6 +50,10 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 
 @end
 
+@interface Player (Headphones)
+
+@end
+
 @implementation Player {
     NSString *_destDirectory;
     NSString *_cacheDirectory;
@@ -70,7 +74,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     _destDirectory = PlayerFileManager.sharedInstance.destDirectory;
     _cacheDirectory = PlayerFileManager.sharedInstance.cacheDirectory;
     
-    [self configAudioSession];
+    [self configAudioSessionCategory];
 }
 
 - (void)dealloc {
@@ -156,8 +160,37 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     }
 }
 
+- (float)duration {
+    float duration = CMTimeGetSeconds(self.player.currentItem.duration);
+    return duration;
+}
+
 - (void)setVolume:(float)volume {
     self.player.volume = volume;
+}
+
+- (void)seekTo:(float)seconds {
+    AVPlayerItem *item = self.player.currentItem;
+    if (item) {
+        CMTime time = item.currentTime;
+        CMTimeScale timeScale = time.timescale;
+        CMTime seekTime = CMTimeMakeWithSeconds(seconds, timeScale);
+        [self.player seekToTime:seekTime];
+    }
+}
+
+- (void)configAudioSessionCategory {
+    NSError *error;
+    BOOL success = [AVAudioSession.sharedInstance setActive:YES error:&error];
+    if (!success) {
+        NSLog(@"Audio Session set active with error: %@", error);
+    } else {
+        success = [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback
+                                                       error:&error];
+        if (!success) {
+            NSLog(@"Audio Session set category with error: %@", error.localizedDescription);
+        }
+    }
 }
 
 - (void)configDelegates:(AVURLAsset *)asset originScheme:(NSString *)scheme {
@@ -338,62 +371,6 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     return [components URL];
 }
 
-#pragma mark - Audio Category Configuration
-
-- (void)configAudioSession {
-    NSError *error;
-    BOOL success = [AVAudioSession.sharedInstance setActive:YES error:&error];
-    if (!success) {
-        NSLog(@"Audio Session set active with error: %@", error);
-    } else {
-        success = [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback
-                                                 withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker
-                                                       error:&error];
-        if (!success) {
-            NSLog(@"Audio Session set category with error: %@", error);
-        } else {
-            
-        }
-    }
-    
-#if DEBUG
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioRouteChangeListenerCallback:)
-                                                 name:AVAudioSessionRouteChangeNotification
-                                               object:nil];
-    if ([self isHeadSetPlugging]) {
-        NSLog(@"🎧");
-    } else {
-        NSLog(@"📱");
-    }
-#endif
-}
-
-- (void)audioRouteChangeListenerCallback:(NSNotification*)notification {
-    NSDictionary *interuptionDict = notification.userInfo;
-    NSInteger routeChangeReason = [[interuptionDict valueForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
-    switch (routeChangeReason) {
-        case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
-            NSLog(@"AVAudioSessionRouteChangeReasonNewDeviceAvailable");
-            break;
-        case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
-            NSLog(@"AVAudioSessionRouteChangeReasonOldDeviceUnavailable");
-            break;
-        case AVAudioSessionRouteChangeReasonCategoryChange:
-            // called at start - also when other audio wants to play
-            NSLog(@"AVAudioSessionRouteChangeReasonCategoryChange");
-            break;
-    }
-}
-
-- (BOOL)isHeadSetPlugging {
-    AVAudioSessionRouteDescription *route = [[AVAudioSession sharedInstance] currentRoute];
-    for (AVAudioSessionPortDescription *desc in [route outputs]) {
-        if ([[desc portType] isEqualToString:AVAudioSessionPortHeadphones])
-            return YES;
-    }
-    return NO;
-}
-
 @end
 
 @implementation Player (PixelBuffer)
@@ -410,6 +387,47 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                 CVBufferRelease(pixelBuffer);
             }
         }
+    }
+}
+
+@end
+
+@implementation Player (Headphones)
+
+- (void)configHeadphones {
+    if ([self isHeadSetPlugging]) {
+        NSLog(@"🎧");
+    } else {
+        NSLog(@"📱");
+    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioRouteChangeListenerCallback:)
+                                                 name:AVAudioSessionRouteChangeNotification
+                                               object:nil];
+}
+
+- (BOOL)isHeadSetPlugging {
+    AVAudioSessionRouteDescription *route = [[AVAudioSession sharedInstance] currentRoute];
+    for (AVAudioSessionPortDescription *desc in [route outputs]) {
+        if ([[desc portType] isEqualToString:AVAudioSessionPortHeadphones])
+            return YES;
+    }
+    return NO;
+}
+
+- (void)audioRouteChangeListenerCallback:(NSNotification*)notification {
+    NSDictionary *interuptionDict = notification.userInfo;
+    NSInteger routeChangeReason = [[interuptionDict valueForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
+    switch (routeChangeReason) {
+        case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
+            NSLog(@"AVAudioSessionRouteChangeReasonNewDeviceAvailable");
+            break;
+        case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
+            NSLog(@"AVAudioSessionRouteChangeReasonOldDeviceUnavailable");
+            break;
+        case AVAudioSessionRouteChangeReasonCategoryChange:
+            // called at start - also when other audio wants to play
+            NSLog(@"AVAudioSessionRouteChangeReasonCategoryChange");
+            break;
     }
 }
 
