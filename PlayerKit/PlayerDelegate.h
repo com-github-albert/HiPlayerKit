@@ -3,7 +3,7 @@
 //  PlayerKit
 //
 //  Created by JT Ma on 04/01/2018.
-//  Copyright © 2018 JT (ma.jiangtao.86@gmail.com). All rights reserved.
+//  Copyright © 2018 <https://github.com/mutating>. All rights reserved.
 //
 
 #import <AVFoundation/AVFoundation.h>
