@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.name         = "PlayerKit"
   s.version      = "0.0.1"
-  s.summary      = "An object that provides the interface to control the player's transport behavior."
+  s.summary      = "An Audiovisual Playback System"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -91,10 +91,10 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "PlayerKit", "PlayerKit/*.{h,m}"
+  s.source_files = "PlayerKit", "PlayerKit/*.{h,m}", "PlayerKit/NetworkKit/*.{h,m}"
   # s.exclude_files = "Classes/Exclude"
 
-  s.public_header_files = "PlayerKit/*.{h}"
+  s.public_header_files = "PlayerKit/*.{h}", "PlayerKit/NetworkKit/*.{h}"
 
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
