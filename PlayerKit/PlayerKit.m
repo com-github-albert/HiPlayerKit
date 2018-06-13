@@ -31,7 +31,7 @@
 
 + (void)getFrameWithVideoURL:(NSURL *)url
                       atTime:(NSTimeInterval)seconds
-                  completion:(void (^)(UIImage * _Nullable image))completion {
+                  completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
         NSParameterAssert(asset);
@@ -47,14 +47,13 @@
         CMTime actualTime;
         imageRef = [generator copyCGImageAtTime:time
                                      actualTime:&actualTime error:&error];
-        if(!imageRef) {
-            NSLog(@"%@ error %@", NSStringFromSelector(_cmd), error);
-            completion(nil);
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            if(!imageRef) {
+                completion(nil, error);
+            }
             UIImage *image = [[UIImage alloc] initWithCGImage:imageRef];
             CGImageRelease(imageRef);
-            completion(image);
+            completion(image, nil);
         });
     });
 }

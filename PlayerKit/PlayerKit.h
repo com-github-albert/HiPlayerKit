@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)getFrameWithVideoURL:(NSURL *)url
                       atTime:(NSTimeInterval)seconds
-                  completion:(void (^)(UIImage * _Nullable image))completion;
+                  completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion;
 
 @end
 
