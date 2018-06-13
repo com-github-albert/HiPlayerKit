@@ -24,7 +24,7 @@
 /* Begin PBXBuildFile section */
 		6BCF4FE420C8FF9200D7EB72 /* PlayerKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCF4FE320C8FF9200D7EB72 /* PlayerKit.m */; };
 		6BCF4FE520C8FF9200D7EB72 /* PlayerKit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6BCF4FE220C8FF9200D7EB72 /* PlayerKit.h */; };
-		6BCF4FF520C901EA00D7EB72 /* 1.0 in Version File */ = {isa = PBXBuildFile; fileRef = 6BCF4FF420C901D800D7EB72 /* 1.0 */; };
+		6BCF4FF520C901EA00D7EB72 /* 0.0.1 in Version File */ = {isa = PBXBuildFile; fileRef = 6BCF4FF420C901D800D7EB72 /* 0.0.1 */; };
 		6BCF500320C9085D00D7EB72 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCF4FF720C9085B00D7EB72 /* Player.m */; };
 		6BCF500420C9085D00D7EB72 /* PlayerAssetLoaderDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCF4FFB20C9085C00D7EB72 /* PlayerAssetLoaderDelegate.m */; };
 		6BCF500520C9085D00D7EB72 /* PlayerFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCF4FFE20C9085C00D7EB72 /* PlayerFileManager.m */; };
@@ -67,7 +67,7 @@
 			dstPath = version;
 			dstSubfolderSpec = 7;
 			files = (
-				6BCF4FF520C901EA00D7EB72 /* 1.0 in Version File */,
+				6BCF4FF520C901EA00D7EB72 /* 0.0.1 in Version File */,
 			);
 			name = "Version File";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -78,7 +78,7 @@
 		6BCF4FDF20C8FF9200D7EB72 /* libPlayerKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPlayerKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BCF4FE220C8FF9200D7EB72 /* PlayerKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerKit.h; sourceTree = "<group>"; };
 		6BCF4FE320C8FF9200D7EB72 /* PlayerKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerKit.m; sourceTree = "<group>"; };
-		6BCF4FF420C901D800D7EB72 /* 1.0 */ = {isa = PBXFileReference; lastKnownFileType = text; path = 1.0; sourceTree = "<group>"; };
+		6BCF4FF420C901D800D7EB72 /* 0.0.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = 0.0.1; sourceTree = "<group>"; };
 		6BCF4FF720C9085B00D7EB72 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
 		6BCF4FF820C9085B00D7EB72 /* PlayerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDelegate.h; sourceTree = "<group>"; };
 		6BCF4FF920C9085B00D7EB72 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
@@ -116,7 +116,7 @@
 		6BCF4FD620C8FF9200D7EB72 = {
 			isa = PBXGroup;
 			children = (
-				6BCF4FF420C901D800D7EB72 /* 1.0 */,
+				6BCF4FF420C901D800D7EB72 /* 0.0.1 */,
 				6BCF4FE120C8FF9200D7EB72 /* PlayerKit */,
 				6BCF4FE020C8FF9200D7EB72 /* Products */,
 			);
