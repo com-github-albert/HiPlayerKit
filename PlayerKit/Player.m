@@ -37,11 +37,6 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     PlayerAssetLoaderDelegate *assetLoaderDelegate;
 }
 
-@property (nonatomic, strong) AVPlayer *player;
-@property (nonatomic, strong) AVPlayerItem *item;
-@property (nonatomic, strong) AVPlayerItemVideoOutput *itemOutput;
-@property (nonatomic, assign) id itemObserver;
-
 @end
 
 @interface Player (PixelBuffer)
@@ -57,6 +52,9 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 @implementation Player {
     NSString *_destDirectory;
     NSString *_cacheDirectory;
+    
+    id _itemObserver;
+    BOOL _autoPlaying;
 }
 
 - (instancetype)init {
@@ -67,8 +65,17 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     return self;
 }
 
+- (instancetype)initWithURL:(NSURL *)url {
+    self = [super init];
+    if (self) {
+        [self initialize];
+        [self prepareWithURL:url];
+    }
+    return self;
+}
+
 - (void)initialize {
-    self.player = [[AVPlayer alloc] init];
+    _player = [[AVPlayer alloc] init];
     _running = NO;
     
     _destDirectory = PlayerFileManager.sharedInstance.destDirectory;
@@ -78,16 +85,16 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 }
 
 - (void)dealloc {
-    if (self.item) {
-        [self.item removeObserver:self forKeyPath:kStatusKey context:kPlayerStatusObservationContext];
+    if (_item) {
+        [_item removeObserver:self forKeyPath:kStatusKey context:kPlayerStatusObservationContext];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
-                                                      object:self.item];
-        [self.item removeOutput:self.itemOutput];
+                                                      object:_item];
+        [_item removeOutput:_itemOutput];
         
-        [self.player removeObserver:self forKeyPath:kCurrentItemKey context:kPlayerCurrentItemObservationContext];
-        [self.player removeObserver:self forKeyPath:kRateKey context:kPlayerRateObservationContext];
-        [self.player removeTimeObserver:self.itemObserver];
+        [_player removeObserver:self forKeyPath:kCurrentItemKey context:kPlayerCurrentItemObservationContext];
+        [_player removeObserver:self forKeyPath:kRateKey context:kPlayerRateObservationContext];
+        [_player removeTimeObserver:_itemObserver];
         
         [self->assetLoaderDelegate invalidate];
         self->assetLoaderDelegate = nil;
@@ -96,6 +103,66 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 }
 
 - (void)play:(NSURL *)url {
+    _autoPlaying = YES;
+    [self prepareWithURL:url];
+}
+
+- (void)resume {
+    if (!_running) {
+        _running = YES;
+        [_player play];
+    }
+}
+
+- (void)pause {
+    if (_running) {
+        _running = NO;
+        [_player pause];
+    }
+}
+
+- (float)duration {
+    float duration = CMTimeGetSeconds(_player.currentItem.duration);
+    return duration;
+}
+
+- (void)setVolume:(float)volume {
+    _player.volume = volume;
+}
+
+- (void)seekTo:(float)seconds {
+    AVPlayerItem *item = _player.currentItem;
+    if (item) {
+        CMTime time = item.currentTime;
+        CMTimeScale timeScale = time.timescale;
+        CMTime seekTime = CMTimeMakeWithSeconds(seconds, timeScale);
+        [_player seekToTime:seekTime];
+    }
+}
+
+- (void)configAudioSessionCategory {
+    NSError *error;
+    BOOL success = [AVAudioSession.sharedInstance setActive:YES error:&error];
+    if (!success) {
+        NSLog(@"Audio Session set active with error: %@", error);
+    } else {
+        success = [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback
+                                                       error:&error];
+        if (!success) {
+            NSLog(@"Audio Session set category with error: %@", error.localizedDescription);
+        }
+    }
+}
+
+- (void)configDelegates:(AVURLAsset *)asset originScheme:(NSString *)scheme {
+    self->assetLoaderDelegate = [[PlayerAssetLoaderDelegate alloc] initWithOriginScheme:scheme
+                                                                         cacheDirectory:_cacheDirectory
+                                                                          destDirectory:_destDirectory];
+    AVAssetResourceLoader *loader = asset.resourceLoader;
+    [loader setDelegate:assetLoaderDelegate queue:dispatch_queue_create("com.PlayerKit.AssetLoaderDelegate", nil)];
+}
+
+- (void)prepareWithURL:(NSURL *)url {
     if (url) {
         AVURLAsset *asset;
         
@@ -140,68 +207,13 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
         [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler: ^{
             dispatch_async( dispatch_get_main_queue(), ^{
                 /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-                [weakSelf prepareToPlayAsset:asset withKeys:requestedKeys];
+                [weakSelf prepareWithAsset:asset withKeys:requestedKeys];
             });
         }];
     }
 }
 
-- (void)resume {
-    if (!_running) {
-        _running = YES;
-        [self.player play];
-    }
-}
-
-- (void)pause {
-    if (_running) {
-        _running = NO;
-        [self.player pause];
-    }
-}
-
-- (float)duration {
-    float duration = CMTimeGetSeconds(self.player.currentItem.duration);
-    return duration;
-}
-
-- (void)setVolume:(float)volume {
-    self.player.volume = volume;
-}
-
-- (void)seekTo:(float)seconds {
-    AVPlayerItem *item = self.player.currentItem;
-    if (item) {
-        CMTime time = item.currentTime;
-        CMTimeScale timeScale = time.timescale;
-        CMTime seekTime = CMTimeMakeWithSeconds(seconds, timeScale);
-        [self.player seekToTime:seekTime];
-    }
-}
-
-- (void)configAudioSessionCategory {
-    NSError *error;
-    BOOL success = [AVAudioSession.sharedInstance setActive:YES error:&error];
-    if (!success) {
-        NSLog(@"Audio Session set active with error: %@", error);
-    } else {
-        success = [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback
-                                                       error:&error];
-        if (!success) {
-            NSLog(@"Audio Session set category with error: %@", error.localizedDescription);
-        }
-    }
-}
-
-- (void)configDelegates:(AVURLAsset *)asset originScheme:(NSString *)scheme {
-    self->assetLoaderDelegate = [[PlayerAssetLoaderDelegate alloc] initWithOriginScheme:scheme
-                                                                         cacheDirectory:_cacheDirectory
-                                                                          destDirectory:_destDirectory];
-    AVAssetResourceLoader *loader = asset.resourceLoader;
-    [loader setDelegate:assetLoaderDelegate queue:dispatch_queue_create("com.PlayerKit.AssetLoaderDelegate", nil)];
-}
-
-- (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys {
+- (void)prepareWithAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys {
     /* Make sure that the value of each key has loaded successfully. */
     for (NSString *thisKey in requestedKeys) {
         NSError *error = nil;
@@ -250,17 +262,17 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     /* At this point we're ready to set up for playback of the asset. */
     
     /* Stop observing our prior AVPlayerItem, if we have one. */
-    if (self.item) {
-        [self.item removeObserver:self forKeyPath:kStatusKey];
+    if (_item) {
+        [_item removeObserver:self forKeyPath:kStatusKey];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
-                                                      object:self.item];
-        [self.item removeOutput:self.itemOutput];
+                                                      object:_item];
+        [_item removeOutput:_itemOutput];
     }
     
     /* Create a new instance of AVPlayerItem from the now successfully loaded AVAsset. */
-    self.item = [AVPlayerItem playerItemWithAsset:asset];
-    [self.item addObserver:self
+    _item = [AVPlayerItem playerItemWithAsset:asset];
+    [_item addObserver:self
                 forKeyPath:kStatusKey
                    options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                    context:kPlayerStatusObservationContext];
@@ -268,33 +280,33 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playerItemDidReachEnd:)
                                                  name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:self.item];
+                                               object:_item];
     
-    if (self.outputFormatType <= 0) {
-        self.outputFormatType = kCVPixelFormatType_32BGRA;
+    if (_outputFormatType <= 0) {
+        _outputFormatType = kCVPixelFormatType_32BGRA;
     }
-    self.itemOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:@{(id)kCVPixelBufferPixelFormatTypeKey:[NSNumber numberWithInt:self.outputFormatType]}];
-    [self.item addOutput:self.itemOutput];
+    _itemOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:@{(id)kCVPixelBufferPixelFormatTypeKey:[NSNumber numberWithInt:_outputFormatType]}];
+    [_item addOutput:_itemOutput];
     
-    if (self.player.currentItem != self.item) {
-        [self.player replaceCurrentItemWithPlayerItem:self.item];
+    if (_player.currentItem != _item) {
+        [_player replaceCurrentItemWithPlayerItem:_item];
         
         /* Observe the AVPlayer "currentItem" property to find out when any
          AVPlayer replaceCurrentItemWithPlayerItem: replacement will/did
          occur.*/
-        [self.player addObserver:self
+        [_player addObserver:self
                       forKeyPath:kCurrentItemKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:kPlayerCurrentItemObservationContext];
         
         /* Observe the AVPlayer "rate" property to update the scrubber control. */
-        [self.player addObserver:self
+        [_player addObserver:self
                       forKeyPath:kRateKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:kPlayerRateObservationContext];
         
         __weak typeof(self) weakSelf = self;
-        self.itemObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 30)
+        _itemObserver = [_player addPeriodicTimeObserverForInterval:CMTimeMake(1, 30)
                                                                       queue:dispatch_get_main_queue()
                                                                  usingBlock:^(CMTime time) {
             if (weakSelf.isRunning) {
@@ -306,7 +318,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     [self pause];
-    [self.player seekToTime:CMTimeMake(0, 1)];
+    [_player seekToTime:CMTimeMake(0, 1)];
     if (_loop) {
         [self resume];
     }
@@ -327,10 +339,12 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                 break;
             case AVPlayerItemStatusReadyToPlay: {
                 NSLog(@"Status readyToPlay");
-                if([self.delegate respondsToSelector:@selector(playerReadyToPlay:)]) {
-                    [self.delegate playerReadyToPlay:self.player];
+                if([_delegate respondsToSelector:@selector(playerReadyToPlay:)]) {
+                    [_delegate playerReadyToPlay:_player];
                 }
-                [self resume];
+                if (_autoPlaying) {
+                    [self resume];
+                }
             }
                 break;
             case AVPlayerItemStatusFailed: {
@@ -376,13 +390,13 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 @implementation Player (PixelBuffer)
 
 - (void)frame {
-    if([self.delegate respondsToSelector:@selector(player:didOutputPixelBuffer:)]) {
-        const CMTime currentTime = self.item.currentTime;
-        if ([self.itemOutput hasNewPixelBufferForItemTime:currentTime]) {
-            const CVPixelBufferRef pixelBuffer = [self.itemOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:nil];
+    if([_delegate respondsToSelector:@selector(player:didOutputPixelBuffer:)]) {
+        const CMTime currentTime = _item.currentTime;
+        if ([_itemOutput hasNewPixelBufferForItemTime:currentTime]) {
+            const CVPixelBufferRef pixelBuffer = [_itemOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:nil];
             if (pixelBuffer) {
                 CVPixelBufferLockBaseAddress(pixelBuffer, 0);
-                [self.delegate player:self.player didOutputPixelBuffer:pixelBuffer];
+                [_delegate player:_player didOutputPixelBuffer:pixelBuffer];
                 CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
                 CVBufferRelease(pixelBuffer);
             }

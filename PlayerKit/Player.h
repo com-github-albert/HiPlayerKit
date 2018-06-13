@@ -23,6 +23,8 @@ typedef enum : NSUInteger {
 @interface Player : NSObject
 
 @property (nonatomic, readonly) AVPlayer *player;
+@property (nonatomic, readonly) AVPlayerItem *item;
+@property (nonatomic, readonly) AVPlayerItemVideoOutput *itemOutput;
 
 /*!
  Indicates the current audio volume of the player; 0.0 means "silence all audio", 1.0 means "play at the full volume of the current item".
@@ -68,6 +70,21 @@ typedef enum : NSUInteger {
  The delegate of Player.
  */
 @property (nonatomic, weak) id<PlayerDelegate> delegate;
+
+/*!
+ @method       initWithURL:
+ @return       An instance of Player
+ @abstract     Initializes a Player
+ */
+- (instancetype)init;
+
+/*!
+ @method       initWithURL:
+ @param        url reference
+ @return       An instance of Player
+ @abstract     Initializes a Player taht plays a single audiovisual resource referenced by URL
+ */
+- (instancetype)initWithURL:(NSURL *)url;
 
 /*!
  @method        play
