@@ -40,7 +40,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 
 @interface Player (PixelBuffer)
 
-- (void)frame;
+- (void)frameAtTime:(CMTime)time;
 
 @end
 
@@ -306,11 +306,11 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
         
         __weak typeof(self) weakSelf = self;
         _itemObserver = [_player addPeriodicTimeObserverForInterval:CMTimeMake(1, 30)
-                                                                      queue:dispatch_get_main_queue()
-                                                                 usingBlock:^(CMTime time) {
-            if (weakSelf.isRunning) {
-                [weakSelf frame];
-            }
+                                                              queue:dispatch_get_main_queue()
+                                                         usingBlock:^(CMTime time) {
+                                                             if (weakSelf.isRunning) {
+                                                                 [weakSelf frameAtTime:time];
+                                                             }
         }];
     }
 }
@@ -388,11 +388,10 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 
 @implementation Player (PixelBuffer)
 
-- (void)frame {
+- (void)frameAtTime:(CMTime)time {
     if([_delegate respondsToSelector:@selector(player:didOutputPixelBuffer:)]) {
-        const CMTime currentTime = _item.currentTime;
-        if ([_itemOutput hasNewPixelBufferForItemTime:currentTime]) {
-            const CVPixelBufferRef pixelBuffer = [_itemOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:nil];
+        if ([_itemOutput hasNewPixelBufferForItemTime:time]) {
+            const CVPixelBufferRef pixelBuffer = [_itemOutput copyPixelBufferForItemTime:time itemTimeForDisplay:nil];
             if (pixelBuffer) {
                 CVPixelBufferLockBaseAddress(pixelBuffer, 0);
                 [_delegate player:_player didOutputPixelBuffer:pixelBuffer];
