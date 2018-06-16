@@ -120,6 +120,31 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     }
 }
 
+- (void)seekTo:(NSTimeInterval)seconds {
+    _running = YES;
+    if (_item) {
+        CMTime time = _item.currentTime;
+        CMTimeScale timeScale = time.timescale;
+        if (seconds < 0) {
+            seconds = CMTimeGetSeconds(time);
+        }
+        
+        seconds = MIN(seconds, self.playerLoadedSeconds);
+        seconds = MAX(0, (seconds - kPlayerBackSpaceTime));
+        CMTime seekTime = CMTimeMakeWithSeconds(seconds, timeScale);
+        
+        __weak typeof(self) weakSelf = self;
+        [_player seekToTime:seekTime
+            toleranceBefore:kCMTimeZero
+             toleranceAfter:kCMTimeZero
+          completionHandler:^(BOOL finished) {
+              if (finished) {
+                  [weakSelf.player play];
+              }
+          }];
+    }
+}
+
 - (float)duration {
     float duration = CMTimeGetSeconds(_player.currentItem.duration);
     return duration;
@@ -129,14 +154,6 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     _player.volume = volume;
 }
 
-- (void)seekTo:(float)seconds {
-    AVPlayerItem *item = _player.currentItem;
-    if (item) {
-        CMTime time = item.currentTime;
-        CMTimeScale timeScale = time.timescale;
-        CMTime seekTime = CMTimeMakeWithSeconds(seconds, timeScale);
-        [_player seekToTime:seekTime];
-    }
 }
 
 - (void)configAudioSessionCategory {

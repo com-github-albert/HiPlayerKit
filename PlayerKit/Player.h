@@ -119,7 +119,7 @@ typedef enum : NSUInteger {
  @abstract      Moves the playback cursor.
  @param         seconds time
  */
-- (void)seekTo:(float)seconds;
+- (void)seekTo:(NSTimeInterval)seconds;
 
 @end
 
