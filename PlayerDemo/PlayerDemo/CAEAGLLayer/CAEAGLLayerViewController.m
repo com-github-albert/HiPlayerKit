@@ -27,9 +27,9 @@
     self.player.delegate = self;
     self.player.outputFormatType = kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange;
     self.player.loop = YES;
+    self.player.beginTimeInterval = 6;
     
-    NSString *videoAddress = @"https://images.apple.com/media/cn/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-cn-20170912_1280x720h.mp4";
-    NSURL *url = [NSURL URLWithString:videoAddress];
+    NSURL *url = [NSBundle.mainBundle URLForResource:@"apple" withExtension:@"mp4"];
     [self.player play:url];
 }
 
@@ -45,6 +45,10 @@
 
 - (void)player:(AVPlayer *)player didOutputPixelBuffer:(CVPixelBufferRef)pixelBuffer {
     [self.playerPreview displayPixelBuffer:pixelBuffer];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.player seekTo:4];
 }
 
 @end

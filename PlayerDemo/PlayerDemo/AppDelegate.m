@@ -17,11 +17,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [UIView animateWithDuration:1 animations:^{
-        
-    } completion:^(BOOL finished) {
-        
-    }];
     return YES;
 }
 
