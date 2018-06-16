@@ -108,8 +108,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 
 - (void)resume {
     if (!_running) {
-        _running = YES;
-        [_player play];
+        [self seekTo:-1];
     }
 }
 
@@ -154,6 +153,12 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     _player.volume = volume;
 }
 
+- (float)playerLoadedSeconds {
+    CMTimeRange loadedTimeRange = _item.loadedTimeRanges.firstObject.CMTimeRangeValue;
+    float loadedStart = CMTimeGetSeconds(loadedTimeRange.start);
+    float loadedDuration = CMTimeGetSeconds(loadedTimeRange.duration);
+    float loadedSeconds = loadedStart + loadedDuration;
+    return loadedSeconds;
 }
 
 - (void)configAudioSessionCategory {
