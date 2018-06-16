@@ -52,6 +52,11 @@ typedef enum : NSUInteger {
 @property (nonatomic, readonly) float duration;
 
 /*!
+ Indicates when the videovisual starts playing.
+ */
+@property (nonatomic) NSTimeInterval beginTimeInterval;
+
+/*!
  Indicates whether the player is currently running.
  */
 @property (nonatomic, readonly, getter=isRunning) BOOL running;

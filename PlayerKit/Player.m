@@ -54,6 +54,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     
     id _itemObserver;
     BOOL _autoPlaying;
+    BOOL _isInitialize;
 }
 
 - (instancetype)init {
@@ -76,6 +77,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 - (void)initialize {
     _player = [[AVPlayer alloc] init];
     _running = NO;
+    _beginTimeInterval = -1;
     
     _destDirectory = PlayerFileManager.sharedInstance.destDirectory;
     _cacheDirectory = PlayerFileManager.sharedInstance.cacheDirectory;
@@ -339,10 +341,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     [self pause];
-    [_player seekToTime:CMTimeMake(0, 1)];
-    if (_loop) {
-        [self resume];
-    }
+    [self seekTo:MAX(0, _beginTimeInterval)];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -364,7 +363,14 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                     [_delegate playerReadyToPlay:_player];
                 }
                 if (_autoPlaying) {
-                    [self resume];
+                    if (_beginTimeInterval < 0) {
+                        [self resume];
+                    } else {
+                        if (!_isInitialize) {
+                            _isInitialize = YES;
+                            [self seekTo:_beginTimeInterval];
+                        }
+                    }
                 }
             }
                 break;
