@@ -17,12 +17,6 @@ Features
 Installation
 ==============
 
-### CocoaPods
-
-* 1. Add `pod 'PlayerKit'` to your Podfile.
-* 2. Run `pod install` or `pod update`.
-* 3. `import <PlayerKit/PlayerKit.h>`.
-
 ### Manually
 
 * 1. Clone the repo.
