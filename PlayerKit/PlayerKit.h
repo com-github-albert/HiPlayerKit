@@ -30,16 +30,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (class, nonatomic) NSString *destDirectory;
 
-/**
- get the frame at the sepecified time with the video address url.
-
- @param url the video address url that you want to get a frame.
- @param seconds get a frame at the sepecified time.
- @param completion A block object to be executed when the frame is got. This block has no return value and takes a single UIImage argument that indicates the image from a video at the specified time. The method is asynchronous and the complete block return in a main thread.
+/*!
+ @method        previewFromVideoURL:atTime:completion:
+ @param         url the video address url that you want to get a frame.
+ @param         seconds get a preview at the sepecified time.
+ @param         completion A block object to be executed when the frame is got. This block has no return value and takes a single UIImage argument that indicates the image from a video at the specified time. The method is asynchronous and the complete block return in a main thread.
+ @abstract      get the frame at the sepecified time from the video address url.
  */
-+ (void)getFrameWithVideoURL:(NSURL *)url
-                      atTime:(NSTimeInterval)seconds
-                  completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion;
++ (void)previewFromVideoURL:(NSURL *)url
+                     atTime:(NSTimeInterval)seconds
+                 completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion;
 
 @end
 

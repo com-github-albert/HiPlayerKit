@@ -29,9 +29,9 @@
     return PlayerFileManager.sharedInstance.cacheDirectory;
 }
 
-+ (void)getFrameWithVideoURL:(NSURL *)url
-                      atTime:(NSTimeInterval)seconds
-                  completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion {
++ (void)previewFromVideoURL:(NSURL *)url
+                     atTime:(NSTimeInterval)seconds
+                 completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
         NSParameterAssert(asset);
