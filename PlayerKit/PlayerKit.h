@@ -16,11 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PlayerKit : NSObject
 
 /*!
- The version of PlayerKit.
+ The version of PlayerKit framework.
  */
 @property (class, nonatomic, readonly) NSString *version;
 
-/**
+/*!
  The directory's path for saving the cache file is being downloaded.
  */
 @property (class, nonatomic) NSString *cacheDirectory;
