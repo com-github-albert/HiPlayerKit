@@ -79,7 +79,7 @@ static dispatch_once_t onceToken = 0;
     [PlayerFileManager createDirectoryAtPath:_cacheDirectory];
 }
 
-- (void)clean {
+- (void)free {
     sharedInstance = nil;
     onceToken = 0;
 }

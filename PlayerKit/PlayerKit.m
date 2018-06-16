@@ -59,7 +59,7 @@
 }
 
 - (void)dealloc {
-    [PlayerFileManager.sharedInstance clean];
+    [PlayerFileManager.sharedInstance free];
 }
 
 @end

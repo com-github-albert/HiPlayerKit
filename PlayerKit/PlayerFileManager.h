@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *destDirectory;
 @property (nonatomic, strong) NSString *cacheDirectory;
 
-- (void)clean;
+- (void)free;
 
 @end
 
