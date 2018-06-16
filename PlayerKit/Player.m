@@ -15,24 +15,32 @@
 NSString * const PLAYERKITDOMAIN = @"PLAYERKIT DOMAIN";
 
 /* Asset keys */
-NSString * const kPlayableKey       = @"playable";
+NSString * const kPlayerPlayableKey       = @"playable";
 
 /* PlayerItem keys */
-NSString * const kStatusKey         = @"status";
+NSString * const kPlayerStatusKey         = @"status";
+NSString * const kPlayerBufferEmptyKey    = @"playbackBufferEmpty";
+NSString * const kPlayerLikelyKeepUpKey   = @"playbackLikelyToKeepUp";
 
 /* AVPlayer keys */
-NSString * const kRateKey           = @"rate";
-NSString * const kCurrentItemKey    = @"currentItem";
+NSString * const kPlayerRateKey           = @"rate";
+NSString * const kPlayerCurrentItemKey    = @"currentItem";
 
 /* URL Schemes */
-NSString * const kFileScheme        = @"file";
-NSString * const kHttpScheme        = @"http";
-NSString * const kHttpsScheme       = @"https";
-NSString * const kCustomScheme      = @"streaming";
+NSString * const kPlayerFileScheme        = @"file";
+NSString * const kPlayerHttpScheme        = @"http";
+NSString * const kPlayerHttpsScheme       = @"https";
+NSString * const kPlayerCustomScheme      = @"streaming";
 
+/* Play back space time */
+float const kPlayerBackSpaceTime    = 0.4;
+
+/* Context */
 static void *kPlayerStatusObservationContext      = &kPlayerStatusObservationContext;
 static void *kPlayerRateObservationContext        = &kPlayerRateObservationContext;
 static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservationContext;
+static void *kPlayerPlaybackBufferEmptyContext    = &kPlayerPlaybackBufferEmptyContext;
+static void *kPlayerPlaybackLikelyToKeepUpContext = &kPlayerPlaybackLikelyToKeepUpContext;
 
 @interface Player () {
     PlayerAssetLoaderDelegate *assetLoaderDelegate;
@@ -89,20 +97,23 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 
 - (void)dealloc {
     if (_item) {
-        [_item removeObserver:self forKeyPath:kStatusKey context:kPlayerStatusObservationContext];
+        [_item removeObserver:self forKeyPath:kPlayerStatusKey context:kPlayerStatusObservationContext];
+        [_item removeObserver:self forKeyPath:kPlayerBufferEmptyKey context:kPlayerPlaybackBufferEmptyContext];
+        [_item removeObserver:self forKeyPath:kPlayerLikelyKeepUpKey context:kPlayerPlaybackLikelyToKeepUpContext];
+        
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
                                                       object:_item];
         [_item removeOutput:_itemOutput];
         
-        [_player removeObserver:self forKeyPath:kCurrentItemKey context:kPlayerCurrentItemObservationContext];
-        [_player removeObserver:self forKeyPath:kRateKey context:kPlayerRateObservationContext];
+        [_player removeObserver:self forKeyPath:kPlayerCurrentItemKey context:kPlayerCurrentItemObservationContext];
+        [_player removeObserver:self forKeyPath:kPlayerRateKey context:kPlayerRateObservationContext];
         [_player removeTimeObserver:_itemObserver];
         
         [self->assetLoaderDelegate invalidate];
         self->assetLoaderDelegate = nil;
-        NSLog(@"%@ dealloc", NSStringFromClass(self.class));
     }
+    NSLog(@"%@ dealloc", NSStringFromClass(self.class));
 }
 
 - (void)play:(NSURL *)url {
@@ -192,8 +203,8 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
         AVURLAsset *asset;
         
         if (_allowDownloadWhilePlaying) {
-            if ([url.scheme isEqualToString:kHttpScheme] ||
-                [url.scheme isEqualToString:kHttpsScheme]) {
+            if ([url.scheme isEqualToString:kPlayerHttpScheme] ||
+                [url.scheme isEqualToString:kPlayerHttpsScheme]) {
                 NSString *videoPath = [_destDirectory stringByAppendingPathComponent:url.lastPathComponent];
                 BOOL isDirectory;
                 BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:videoPath isDirectory:&isDirectory];
@@ -206,16 +217,16 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                     asset = [AVURLAsset URLAssetWithURL:schemeURL options:nil];
                     [self configDelegates:asset originScheme:scheme];
                 }
-            } else if ([url.scheme isEqualToString:kFileScheme]) {
+            } else if ([url.scheme isEqualToString:kPlayerFileScheme]) {
                 asset = [AVURLAsset URLAssetWithURL:url options:nil];
             } else {
                 url = [NSURL fileURLWithPath:url.path isDirectory:NO];
                 asset = [AVURLAsset URLAssetWithURL:url options:nil];
             }
         } else {
-            if (![url.scheme isEqualToString:kHttpScheme] &&
-                ![url.scheme isEqualToString:kHttpsScheme] &&
-                ![url.scheme isEqualToString:kFileScheme]) {
+            if (![url.scheme isEqualToString:kPlayerHttpScheme] &&
+                ![url.scheme isEqualToString:kPlayerHttpsScheme] &&
+                ![url.scheme isEqualToString:kPlayerFileScheme]) {
                 url = [NSURL fileURLWithPath:url.path isDirectory:NO];
             }
             asset = [AVURLAsset URLAssetWithURL:url options:nil];
@@ -225,7 +236,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
          Create an asset for inspection of a resource referenced by a given URL.
          Load the values for the asset keys  "playable".
          */
-        NSArray *requestedKeys = [NSArray arrayWithObjects:kPlayableKey, nil];
+        NSArray *requestedKeys = [NSArray arrayWithObjects:kPlayerPlayableKey, nil];
         
         __weak typeof(self) weakSelf = self;
         /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
@@ -293,7 +304,10 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     
     /* Stop observing our prior AVPlayerItem, if we have one. */
     if (_item) {
-        [_item removeObserver:self forKeyPath:kStatusKey];
+        [_item removeObserver:self forKeyPath:kPlayerStatusKey context:kPlayerStatusObservationContext];
+        [_item removeObserver:self forKeyPath:kPlayerBufferEmptyKey context:kPlayerPlaybackBufferEmptyContext];
+        [_item removeObserver:self forKeyPath:kPlayerLikelyKeepUpKey context:kPlayerPlaybackLikelyToKeepUpContext];
+        
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
                                                       object:_item];
@@ -303,9 +317,17 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
     /* Create a new instance of AVPlayerItem from the now successfully loaded AVAsset. */
     _item = [AVPlayerItem playerItemWithAsset:asset];
     [_item addObserver:self
-                forKeyPath:kStatusKey
-                   options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-                   context:kPlayerStatusObservationContext];
+            forKeyPath:kPlayerStatusKey
+               options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+               context:kPlayerStatusObservationContext];
+    [_item addObserver:self
+            forKeyPath:kPlayerBufferEmptyKey
+               options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+               context:kPlayerPlaybackBufferEmptyContext];
+    [_item addObserver:self
+            forKeyPath:kPlayerLikelyKeepUpKey
+               options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionNew
+               context:kPlayerPlaybackLikelyToKeepUpContext];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playerItemDidReachEnd:)
@@ -325,13 +347,13 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
          AVPlayer replaceCurrentItemWithPlayerItem: replacement will/did
          occur.*/
         [_player addObserver:self
-                      forKeyPath:kCurrentItemKey
+                      forKeyPath:kPlayerCurrentItemKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:kPlayerCurrentItemObservationContext];
         
         /* Observe the AVPlayer "rate" property to update the scrubber control. */
         [_player addObserver:self
-                      forKeyPath:kRateKey
+                      forKeyPath:kPlayerRateKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:kPlayerRateObservationContext];
         
@@ -355,8 +377,8 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                       ofObject:(id)object
                         change:(NSDictionary<NSKeyValueChangeKey,id> *)change
                        context:(void *)context {
-    
     if (context == kPlayerStatusObservationContext) {
+        NSLog(@"Player Observe Content kPlayerStatusObservationContext");
         AVPlayerItem *playerItem = (AVPlayerItem *)object;
         AVPlayerItemStatus status = playerItem.status;
         switch (status) {
@@ -394,9 +416,13 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                 break;
         }
     } else if (context == kPlayerRateObservationContext) {
-        
+        NSLog(@"Player Observe Content kPlayerRateObservationContext");
     } else if (context == kPlayerCurrentItemObservationContext) {
-        
+        NSLog(@"Player Observe Content kPlayerCurrentItemObservationContext");
+    } else if (context == kPlayerPlaybackBufferEmptyContext) {
+        NSLog(@"Player Observe Content kPlayerPlaybackBufferEmptyContext");
+    } else if (context == kPlayerPlaybackLikelyToKeepUpContext) {
+        NSLog(@"Player Observe Content kPlayerPlaybackLikelyToKeepUpContext");
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -420,7 +446,7 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
 
 - (NSURL *)customSchemeWithURL:(NSURL *)url {
     NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
-    components.scheme = kCustomScheme;
+    components.scheme = kPlayerCustomScheme;
     return [components URL];
 }
 
