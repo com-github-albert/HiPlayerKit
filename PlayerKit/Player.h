@@ -10,6 +10,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol PlayerDelegate <NSObject>
+
+@optional
+
+- (void)playerReadyToPlay:(AVPlayer *)player;
+
+- (void)player:(AVPlayer *)player didOutputPixelBuffer:(CVPixelBufferRef)pixelBuffer;
+
+- (void)playerInterruptedWithError:(NSError *)error;
+
+@end
+
 typedef enum : NSUInteger {
     PreferredTransformOrientationPortrait,
     PreferredTransformOrientationPortraitUpsideDown,
