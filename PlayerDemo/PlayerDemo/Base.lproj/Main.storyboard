@@ -11,10 +11,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Player Layer View Controller-->
+        <!--AVPlayer Layer View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="AVPlayerLayerViewController" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" userLabel="AVPlayer Layer View Controller" customClass="AVPlayerLayerViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -44,10 +44,10 @@
             </objects>
             <point key="canvasLocation" x="-343" y="869"/>
         </scene>
-        <!--Layer View Controller-->
+        <!--Opengl Layer View Controller-->
         <scene sceneID="bxc-rI-GdU">
             <objects>
-                <viewController id="xHa-Ws-bL7" customClass="CAEAGLLayerViewController" sceneMemberID="viewController">
+                <viewController id="xHa-Ws-bL7" userLabel="Opengl Layer View Controller" customClass="CAEAGLLayerViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jX4-th-o24">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -77,10 +77,10 @@
             </objects>
             <point key="canvasLocation" x="423" y="869"/>
         </scene>
-        <!--Frame View Controller-->
+        <!--Preview View Controller-->
         <scene sceneID="6fj-cO-hea">
             <objects>
-                <viewController id="VI7-YK-qtK" customClass="FrameViewController" sceneMemberID="viewController">
+                <viewController id="VI7-YK-qtK" customClass="PreviewViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qCf-DD-eWC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

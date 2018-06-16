@@ -15,7 +15,7 @@
 		6B925A011FE2697900B41E15 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B925A001FE2697900B41E15 /* main.m */; };
 		6B925A0F1FE26B8100B41E15 /* PlayerPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B925A0E1FE26B8100B41E15 /* PlayerPreview.m */; };
 		6BAB8A1420D0C5F100E291D2 /* apple.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6BAB8A1320D0C5F100E291D2 /* apple.mp4 */; };
-		6BBCBC9520CA8C5500E2229E /* FrameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCBC9420CA8C5500E2229E /* FrameViewController.m */; };
+		6BBCBC9520CA8C5500E2229E /* PreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCBC9420CA8C5500E2229E /* PreviewViewController.m */; };
 		6BBDD5961FE36DEB00406037 /* APLEAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBDD5911FE36DEA00406037 /* APLEAGLView.m */; };
 		6BBDD5991FE370AF00406037 /* CAEAGLLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBDD5981FE370AF00406037 /* CAEAGLLayerViewController.m */; };
 		6BBDD59A1FE3797A00406037 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 6BBDD5941FE36DEA00406037 /* Shader.fsh */; };
@@ -38,8 +38,8 @@
 		6B925A0D1FE26B8100B41E15 /* PlayerPreview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerPreview.h; sourceTree = "<group>"; };
 		6B925A0E1FE26B8100B41E15 /* PlayerPreview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerPreview.m; sourceTree = "<group>"; };
 		6BAB8A1320D0C5F100E291D2 /* apple.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = apple.mp4; sourceTree = "<group>"; };
-		6BBCBC9320CA8C5500E2229E /* FrameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FrameViewController.h; sourceTree = "<group>"; };
-		6BBCBC9420CA8C5500E2229E /* FrameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FrameViewController.m; sourceTree = "<group>"; };
+		6BBCBC9320CA8C5500E2229E /* PreviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PreviewViewController.h; sourceTree = "<group>"; };
+		6BBCBC9420CA8C5500E2229E /* PreviewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PreviewViewController.m; sourceTree = "<group>"; };
 		6BBDD5911FE36DEA00406037 /* APLEAGLView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APLEAGLView.m; sourceTree = "<group>"; };
 		6BBDD5921FE36DEA00406037 /* APLEAGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APLEAGLView.h; sourceTree = "<group>"; };
 		6BBDD5941FE36DEA00406037 /* Shader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Shader.fsh; sourceTree = "<group>"; };
@@ -86,7 +86,7 @@
 				6B9259F71FE2697900B41E15 /* Main.storyboard */,
 				6BBDD59C1FE37A5B00406037 /* AVPlayerLayer */,
 				6BBDD59D1FE37A6900406037 /* CAEAGLLayer */,
-				6BBCBC9220CA8C3F00E2229E /* Frame */,
+				6BBCBC9220CA8C3F00E2229E /* Preview */,
 				6BBDD59E1FE37ABE00406037 /* Support File */,
 			);
 			path = PlayerDemo;
@@ -101,13 +101,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6BBCBC9220CA8C3F00E2229E /* Frame */ = {
+		6BBCBC9220CA8C3F00E2229E /* Preview */ = {
 			isa = PBXGroup;
 			children = (
-				6BBCBC9320CA8C5500E2229E /* FrameViewController.h */,
-				6BBCBC9420CA8C5500E2229E /* FrameViewController.m */,
+				6BBCBC9320CA8C5500E2229E /* PreviewViewController.h */,
+				6BBCBC9420CA8C5500E2229E /* PreviewViewController.m */,
 			);
-			path = Frame;
+			path = Preview;
 			sourceTree = "<group>";
 		};
 		6BBDD5931FE36DEA00406037 /* Shaders */ = {
@@ -232,7 +232,7 @@
 				6B925A0F1FE26B8100B41E15 /* PlayerPreview.m in Sources */,
 				6BBDD5961FE36DEB00406037 /* APLEAGLView.m in Sources */,
 				6BBDD5991FE370AF00406037 /* CAEAGLLayerViewController.m in Sources */,
-				6BBCBC9520CA8C5500E2229E /* FrameViewController.m in Sources */,
+				6BBCBC9520CA8C5500E2229E /* PreviewViewController.m in Sources */,
 				6B925A011FE2697900B41E15 /* main.m in Sources */,
 				6B9259F31FE2697900B41E15 /* AppDelegate.m in Sources */,
 			);

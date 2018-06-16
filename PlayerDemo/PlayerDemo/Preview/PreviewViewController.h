@@ -1,5 +1,5 @@
 //
-//  FrameViewController.h
+//  PreviewViewController.h
 //  PlayerDemo
 //
 //  Created by JT Ma on 08/06/2018.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FrameViewController : UIViewController
+@interface PreviewViewController : UIViewController
 
 @end
