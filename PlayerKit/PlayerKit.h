@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import "Player.h"
-#import "PlayerDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
