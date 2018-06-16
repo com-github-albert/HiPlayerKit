@@ -12,6 +12,8 @@
 #import "PlayerFileManager.h"
 #import "PlayerLogger.h"
 
+NSString * const PLAYERKITDOMAIN = @"PLAYERKIT DOMAIN";
+
 /* Asset keys */
 NSString * const kPlayableKey       = @"playable";
 
@@ -242,7 +244,10 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
         NSError *error = nil;
         AVKeyValueStatus keyStatus = [asset statusOfValueForKey:thisKey error:&error];
         if (keyStatus == AVKeyValueStatusFailed) {
-            [self assetFailedToPrepareForPlayback:error];
+            NSError *failedPrepareAsset = [NSError errorWithDomain:PLAYERKITDOMAIN
+                                                               code:PlayerErrorCodePrepareAssetFailed
+                                                           userInfo:error.userInfo];
+            [self interruptedWithError:failedPrepareAsset];
             return;
         }
         /* If you are also implementing -[AVAsset cancelLoading], add your code here to bail out properly in the case of cancellation. */
@@ -257,10 +262,12 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
                                    localizedDescription, NSLocalizedDescriptionKey,
                                    localizedFailureReason, NSLocalizedFailureReasonErrorKey,
                                    nil];
-        NSError *assetCannotBePlayedError = [NSError errorWithDomain:[[NSBundle mainBundle] bundleIdentifier] code:0 userInfo:errorDict];
+        NSError *assetCannotBePlayedError = [NSError errorWithDomain:PLAYERKITDOMAIN
+                                                                code:PlayerErrorCodeAssetCannotBePlayed
+                                                            userInfo:errorDict];
         
         /* Display the error to the user. */
-        [self assetFailedToPrepareForPlayback:assetCannotBePlayedError];
+        [self interruptedWithError:assetCannotBePlayedError];
         return;
     }
     
@@ -377,7 +384,10 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
             case AVPlayerItemStatusFailed: {
                 NSLog(@"Status failed");
                 [self pause];
-                [self assetFailedToPrepareForPlayback:playerItem.error];
+                NSError *statusFailedError = [NSError errorWithDomain:PLAYERKITDOMAIN
+                                                                 code:PlayerErrorCodePlayerItemStatusFailed
+                                                             userInfo:playerItem.error.userInfo];
+                [self interruptedWithError:statusFailedError];
             }
                 break;
             default:
@@ -401,9 +411,11 @@ static void *kPlayerCurrentItemObservationContext = &kPlayerCurrentItemObservati
  *     playable
  *  3) the item did not become ready to play.
  */
-- (void)assetFailedToPrepareForPlayback:(NSError *)error {
+- (void)interruptedWithError:(NSError *)error {
     /* Display the error. */
-    NSLog(@"Error to prepare for playback: %@, reson: %@", error.localizedDescription, error.localizedFailureReason);
+    if ([_delegate respondsToSelector:@selector(playerInterruptedWithError:)]) {
+        [_delegate playerInterruptedWithError:error];
+    }
 }
 
 - (NSURL *)customSchemeWithURL:(NSURL *)url {

@@ -10,6 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+FOUNDATION_EXPORT NSString * const PLAYERKITDOMAIN;
+
+typedef enum : NSUInteger {
+    PlayerErrorCodeUnknown                = -1000,
+    PlayerErrorCodePrepareAssetFailed     = -1001,
+    PlayerErrorCodeAssetCannotBePlayed    = -1002,
+    PlayerErrorCodePlayerItemStatusFailed = -1003,
+} PlayerErrorCode;
+
 @protocol PlayerDelegate <NSObject>
 
 @optional
