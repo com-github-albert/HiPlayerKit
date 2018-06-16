@@ -12,6 +12,7 @@ Features
 
 * Playing a single audiovisual resource referenced by URL (local url and online url).
 * Downloading while playing.
+* Get preview at a sepecified time from the video url.
 
 Installation
 ==============
@@ -29,12 +30,6 @@ Installation
 * 3. Build the framework target.
 * 4. Drag the framework that you had built to your project.
 * 5. `import <PlayerKit/PlayerKit.h>`
-
-Documentation
-==============
-
-Full API documentation is available on [CocoaDocs](http://cocoadocs.org/docsets/PlayerKit/).<br/>
-You can also install documentation locally using [appledoc](https://github.com/tomaz/appledoc).
 
 Requirements
 ==============
