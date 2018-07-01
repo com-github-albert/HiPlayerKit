@@ -22,6 +22,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		4CC64F9A20E8CC5400C679E2 /* 0.0.3 in Version File */ = {isa = PBXBuildFile; fileRef = 4CC64F9920E8CC2500C679E2 /* 0.0.3 */; };
 		6BCF4FE420C8FF9200D7EB72 /* PlayerKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCF4FE320C8FF9200D7EB72 /* PlayerKit.m */; };
 		6BCF4FE520C8FF9200D7EB72 /* PlayerKit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6BCF4FE220C8FF9200D7EB72 /* PlayerKit.h */; };
 		6BCF500320C9085D00D7EB72 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCF4FF720C9085B00D7EB72 /* Player.m */; };
@@ -64,6 +65,7 @@
 			dstPath = version;
 			dstSubfolderSpec = 7;
 			files = (
+				4CC64F9A20E8CC5400C679E2 /* 0.0.3 in Version File */,
 			);
 			name = "Version File";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +73,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4CC64F9920E8CC2500C679E2 /* 0.0.3 */ = {isa = PBXFileReference; lastKnownFileType = text; path = 0.0.3; sourceTree = "<group>"; };
 		6BCF4FDF20C8FF9200D7EB72 /* libPlayerKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPlayerKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BCF4FE220C8FF9200D7EB72 /* PlayerKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerKit.h; sourceTree = "<group>"; };
 		6BCF4FE320C8FF9200D7EB72 /* PlayerKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerKit.m; sourceTree = "<group>"; };
@@ -135,6 +138,7 @@
 				6BCF4FFA20C9085C00D7EB72 /* PlayerFileManager.h */,
 				6BCF4FFE20C9085C00D7EB72 /* PlayerFileManager.m */,
 				6BCF4FFF20C9085C00D7EB72 /* PlayerLogger.h */,
+				4CC64F9920E8CC2500C679E2 /* 0.0.3 */,
 				6BCF501D20C92BE000D7EB72 /* NetworkKit */,
 			);
 			path = PlayerKit;
