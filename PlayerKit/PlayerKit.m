@@ -11,7 +11,7 @@
 
 @implementation PlayerKit
 
-+ (NSString *)version { return @"0.0.1"; }
++ (NSString *)version { return @"0.0.3"; }
 
 + (void)setDestDirectory:(NSString *)destDirectory {
     PlayerFileManager.sharedInstance.destDirectory = destDirectory;
