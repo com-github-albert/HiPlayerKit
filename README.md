@@ -1,11 +1,12 @@
 PlayerKit
 ==============
+
+>A lightweight player framework for iOS. Playing a single audiovisual resource referenced by URL.
+
 ![](playerkit.png)
 
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/ibireme/YYCache/master/LICENSE)&nbsp;
 [![Support](https://img.shields.io/badge/support-iOS%208%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/)&nbsp;
-
-Playing a single audiovisual resource referenced by URL.
 
 Features
 ==============
